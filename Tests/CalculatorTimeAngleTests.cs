@@ -1,4 +1,8 @@
-﻿using CalculateTimeAngle.Services;
+﻿using CalculateTimeAngle.Controllers;
+using CalculateTimeAngle.Models;
+using CalculateTimeAngle.Services;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
 using Xunit;
 
 namespace CalculateTimeAngle.Tests
@@ -26,6 +30,31 @@ namespace CalculateTimeAngle.Tests
     }
 
     
+    [Theory]
+    [InlineData("25:00")]
+    [InlineData("12:60")]
+    [InlineData("invalidInput")]
+    [InlineData(null)]
+
+    public void CalculateTimeAngle_Given_InvalidTimeFormat_ShouldReturnBadRequest(string time)
+    {
+      
+      var mockCalculator = new Mock<IClockAngleCalculator>();
+      var mockLogger = new Mock<ILogger<CalculateTimeAngleApiController>>();
+      var controller = new CalculateTimeAngleApiController(mockCalculator.Object, mockLogger.Object);
+      var request = new TimeAngleRequest { Time = time };
+
+      var result = controller.Calculate(time, request) as BadRequestObjectResult;
+
+      Assert.NotNull(result);
+      Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode);
+      dynamic response = result.Value!;
+      Assert.NotNull(response.error);
+
+
+    }
+
+
 
 
   }

@@ -26,7 +26,7 @@ namespace CalculateTimeAngle.Controllers
     [ProducesResponseType(typeof(TimeAngleResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string),StatusCodes.Status400BadRequest)]
 
-    public IActionResult Calculate([FromQuery] TimeAngleRequest request)
+    public IActionResult Calculate(string time, [FromQuery] TimeAngleRequest request)
     {
       if (request == null || (string.IsNullOrEmpty(request.Time) && (request.Hour == null || request.Minute == null)))
       {
